@@ -1,0 +1,18 @@
+services:
+  # --- AI 分析服務 ---
+  analyzer-service:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: analyzer-app
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    env_file: ../.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # 跨作業系統支援連向宿主機
+    volumes:
+      - ../app:/app/app # 開發模式：將代碼掛載進容器，修改即時生效
+
+networks:
+  default:
+    name: ai-analyzer-net
