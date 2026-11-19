@@ -36,3 +36,11 @@ def test_calibrate_confidence_keeps_high_confidence_when_evidence_is_strong():
         has_image=True,
     )
     assert calibrated.confidence == 0.95
+
+
+def test_json_log_is_literal_message_content():
+    from app.chain import _build_chain
+
+    log = 'ERROR {"status": "offline"}'
+    prompt = _build_chain(log, "").first.invoke({})
+    assert log in prompt.messages[-1].content[0]["text"]

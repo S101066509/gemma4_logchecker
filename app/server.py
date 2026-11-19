@@ -189,7 +189,7 @@ def verify_api_key(api_key: str = Depends(api_key_header)):
         }
     },
 )
-async def diagnose_log(input_data: LogAnalysisInput, _: str = Depends(verify_api_key)):
+def diagnose_log(input_data: LogAnalysisInput, _: str = Depends(verify_api_key)):
     """
     自定義 API 路由：結合預處理與 AI 診斷
     """
