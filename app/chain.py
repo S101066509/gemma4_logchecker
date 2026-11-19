@@ -1,4 +1,5 @@
 from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableSerializable
 from app.core.config import settings
@@ -43,7 +44,7 @@ def _normalize_image_base64(image_base64: Optional[str]) -> str:
     return cleaned
 
 
-def _build_messages(log_text: str, image_base64: Optional[str]) -> list[tuple[str, Any]]:
+def _build_messages(log_text: str, image_base64: Optional[str]) -> list[SystemMessage | HumanMessage]:
     """建立聊天訊息內容（system + user 多模態輸入）。"""
     user_content: list[dict[str, str]] = [
         {"type": "text", "text": DIAGNOSIS_TEMPLATE.format(log_text=log_text)}
@@ -58,7 +59,7 @@ def _build_messages(log_text: str, image_base64: Optional[str]) -> list[tuple[st
             }
         )
 
-    return [("system", SYSTEM_PROMPT), ("user", user_content)]
+    return [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=user_content)]
 
 
 def _build_chain(log_text: str, image_base64: Optional[str]) -> RunnableSerializable[Any, DiagnosticReport]:
